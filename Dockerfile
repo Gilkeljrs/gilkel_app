@@ -1,7 +1,7 @@
-# Usamos una imagen oficial de Python
+# Usamos una imagen oficial de Python ligera
 FROM python:3.11-slim
 
-# Instalar dependencias del sistema necesarias para Node y Reflex
+# Instalar dependencias del sistema indispensables
 RUN apt-get update && apt-get install -y \
     curl \
     unzip \
@@ -9,25 +9,25 @@ RUN apt-get update && apt-get install -y \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-# Crear directorio de trabajo
 WORKDIR /app
 
-# Copiar el requirements e instalar librerías de Python
+# Copiar requirements e instalar librerías de Python sin guardar basura en cache
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar todo el código del proyecto
+# Copiar todo el código
 COPY . .
 
-# LIMITAR LA RAM EN LA COMPILACIÓN DE NODE
-ENV NODE_OPTIONS="--max-old-space-size=256"
+# AJUSTES DE MEMORIA ULTRA EXTREMOS PARA PROTEGER LOS 512MB
+ENV NODE_OPTIONS="--max-old-space-size=200"
+ENV GENERATE_SOURCEMAP=false
 
 # Inicializar Reflex
 RUN reflex init
 
-# Exponer los puertos que usa Reflex
+# Exponer los puertos necesarios
 EXPOSE 3000
 EXPOSE 8000
 
-# El comando definitivo: ejecuta todo junto en producción de forma ligera
+# Arrancar la app de forma unificada pero ultra optimizada
 CMD ["reflex", "run", "--env", "prod"]
