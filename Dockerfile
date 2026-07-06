@@ -1,8 +1,9 @@
-# Imagen ligera de Python
+# Imagen oficial de Python
 FROM python:3.11-slim
 
-# Instalar dependencias esenciales del sistema
+# Instalar curl y unzip (necesarios para que Reflex inicialice Bun/Node)
 RUN apt-get update && apt-get install -y \
+    curl \
     unzip \
     && rm -rf /var/lib/apt/lists/*
 
