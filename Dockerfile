@@ -19,15 +19,15 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copiar todo el código del proyecto
 COPY . .
 
-# LIMITAR MEMORIA DE NODE PARA QUE NO META EL BAJÓN EN RENDER
+# LIMITAR LA RAM EN LA COMPILACIÓN DE NODE
 ENV NODE_OPTIONS="--max-old-space-size=256"
 
-# Inicializar y exportar el frontend estático para ahorrar RAM
+# Inicializar Reflex
 RUN reflex init
-RUN reflex export --frontend-only
 
 # Exponer los puertos que usa Reflex
+EXPOSE 3000
 EXPOSE 8000
 
-# Arrancar solo el backend en producción para que consuma poquita RAM
-CMD ["reflex", "run", "--backend-only", "--env", "prod"]
+# El comando definitivo: ejecuta todo junto en producción de forma ligera
+CMD ["reflex", "run", "--env", "prod"]
